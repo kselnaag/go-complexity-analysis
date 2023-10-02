@@ -1,0 +1,84 @@
+# github.com/shoooooman/go-complexity-analysis
+./complexity.go:41:1: func init (lines of code=6)
+./complexity.go:41:1: func init (cyclomatic complexity=1)
+./complexity.go:41:1: func init (Halstead complexity: volume=155.589, difficulty=4.000)
+./complexity.go:41:1: func init (maintainability index=67)
+./complexity.go:48:1: func run (lines of code=82)
+./complexity.go:48:1: func run (cyclomatic complexity=14)
+./complexity.go:48:1: func run (Halstead complexity: volume=894.969, difficulty=32.000)
+./complexity.go:48:1: func run (maintainability index=35)
+./complexity.go:134:1: func Visit (lines of code=3)
+./complexity.go:134:1: func Visit (cyclomatic complexity=1)
+./complexity.go:134:1: func Visit (Halstead complexity: volume=25.266, difficulty=2.500)
+./complexity.go:134:1: func Visit (maintainability index=79)
+./complexity.go:139:1: func calcCycloComp (lines of code=18)
+./complexity.go:139:1: func calcCycloComp (cyclomatic complexity=5)
+./complexity.go:139:1: func calcCycloComp (Halstead complexity: volume=118.536, difficulty=9.167)
+./complexity.go:139:1: func calcCycloComp (maintainability index=57)
+./complexity.go:158:1: func calcHalstComp (lines of code=27)
+./complexity.go:158:1: func calcHalstComp (cyclomatic complexity=4)
+./complexity.go:158:1: func calcHalstComp (Halstead complexity: volume=533.826, difficulty=23.684)
+./complexity.go:158:1: func calcHalstComp (maintainability index=49)
+./complexity.go:187:1: func countLOC (lines of code=6)
+./complexity.go:187:1: func countLOC (cyclomatic complexity=1)
+./complexity.go:187:1: func countLOC (Halstead complexity: volume=141.777, difficulty=12.000)
+./complexity.go:187:1: func countLOC (maintainability index=67)
+./complexity.go:196:1: func calcMaintIndex (lines of code=5)
+./complexity.go:196:1: func calcMaintIndex (cyclomatic complexity=1)
+./complexity.go:196:1: func calcMaintIndex (Halstead complexity: volume=204.330, difficulty=8.909)
+./complexity.go:196:1: func calcMaintIndex (maintainability index=68)
+./complexity.go:202:1: func walkDecl (lines of code=26)
+./complexity.go:202:1: func walkDecl (cyclomatic complexity=6)
+./complexity.go:202:1: func walkDecl (Halstead complexity: volume=8.000, difficulty=0.000)
+./complexity.go:202:1: func walkDecl (maintainability index=62)
+./complexity.go:229:1: func walkStmt (lines of code=137)
+./complexity.go:229:1: func walkStmt (cyclomatic complexity=49)
+./complexity.go:229:1: func walkStmt (Halstead complexity: volume=8.000, difficulty=0.000)
+./complexity.go:229:1: func walkStmt (maintainability index=40)
+./complexity.go:367:1: func walkSpec (lines of code=16)
+./complexity.go:367:1: func walkSpec (cyclomatic complexity=6)
+./complexity.go:367:1: func walkSpec (Halstead complexity: volume=8.000, difficulty=0.000)
+./complexity.go:367:1: func walkSpec (maintainability index=66)
+./complexity.go:384:1: func walkExpr (lines of code=111)
+./complexity.go:384:1: func walkExpr (cyclomatic complexity=38)
+./complexity.go:384:1: func walkExpr (Halstead complexity: volume=8.000, difficulty=0.000)
+./complexity.go:384:1: func walkExpr (maintainability index=43)
+./complexity.go:496:1: func appendValidSymb (lines of code=5)
+./complexity.go:496:1: func appendValidSymb (cyclomatic complexity=3)
+./complexity.go:496:1: func appendValidSymb (Halstead complexity: volume=44.973, difficulty=3.500)
+./complexity.go:496:1: func appendValidSymb (maintainability index=72)
+locSum= 442
+cycloAvg= 10 129 12
+halstVolAvg= 179.272202 2151.266421 12
+halstDiffAvg= 7.979997 95.759968 12
+maintAvg= 58 705 12
+# github.com/shoooooman/go-complexity-analysis_test
+./complexity_test.go:11:1: func TestAnalyzer (lines of code=4)
+./complexity_test.go:11:1: func TestAnalyzer (cyclomatic complexity=1)
+./complexity_test.go:11:1: func TestAnalyzer (Halstead complexity: volume=78.138, difficulty=6.875)
+./complexity_test.go:11:1: func TestAnalyzer (maintainability index=73)
+locSum= 4
+cycloAvg= 1 1 1
+halstVolAvg= 78.137812 78.137812 1
+halstDiffAvg= 6.875000 6.875000 1
+maintAvg= 73 73 1
+# github.com/shoooooman/go-complexity-analysis/cmd/complexity
+cmd/complexity/main.go:8:1: func main (lines of code=1)
+cmd/complexity/main.go:8:1: func main (cyclomatic complexity=1)
+cmd/complexity/main.go:8:1: func main (Halstead complexity: volume=27.000, difficulty=0.000)
+cmd/complexity/main.go:8:1: func main (maintainability index=89)
+locSum= 1
+cycloAvg= 1 1 1
+halstVolAvg= 27.000000 27.000000 1
+halstDiffAvg= 0.000000 0.000000 1
+maintAvg= 89 89 1
+# github.com/shoooooman/go-complexity-analysis/plugin
+plugin/main.go:25:1: func GetAnalyzers (lines of code=11)
+plugin/main.go:25:1: func GetAnalyzers (cyclomatic complexity=3)
+plugin/main.go:25:1: func GetAnalyzers (Halstead complexity: volume=187.983, difficulty=15.000)
+plugin/main.go:25:1: func GetAnalyzers (maintainability index=60)
+locSum= 11
+cycloAvg= 3 3 1
+halstVolAvg= 187.983463 187.983463 1
+halstDiffAvg= 15.000000 15.000000 1
+maintAvg= 60 60 1

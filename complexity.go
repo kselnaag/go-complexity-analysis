@@ -26,13 +26,23 @@ var Analyzer = &analysis.Analyzer{
 }
 
 var (
-	cycloover  int
-	maintunder int
+	iscyclo bool
+	ismaint bool
+	isloc   bool
+	ishalst bool
+
+	locSum       int
+	cycloAvg     []int
+	halstVolAvg  []float64
+	halstDiffAvg []float64
+	maintAvg     []int
 )
 
 func init() {
-	flag.IntVar(&cycloover, "cycloover", 10, "show functions with the Cyclomatic complexity > N")
-	flag.IntVar(&maintunder, "maintunder", 20, "show functions with the Maintainability index < N")
+	flag.BoolVar(&iscyclo, "cyclo", false, "show functions with the Cyclomatic complexity")
+	flag.BoolVar(&ishalst, "halst", false, "show functions with the Halstead complexity")
+	flag.BoolVar(&isloc, "loc", false, "show functions with the Lines of code")
+	flag.BoolVar(&ismaint, "maint", false, "show functions with the Maintainability index")
 }
 
 func run(pass *analysis.Pass) (interface{}, error) {
@@ -45,23 +55,36 @@ func run(pass *analysis.Pass) (interface{}, error) {
 	inspect.Preorder(nodeFilter, func(n ast.Node) {
 		switch n := n.(type) {
 		case *ast.FuncDecl:
-			cycloComp := calcCycloComp(n)
-			if cycloComp > cycloover {
-				npos := n.Pos()
-				p := pass.Fset.File(npos).Position(npos)
-				msg := fmt.Sprintf("func %s seems to be complex (cyclomatic complexity=%d)\n", n.Name, cycloComp)
+			npos := n.Pos()
+			p := pass.Fset.File(npos).Position(npos)
+
+			loc := countLOC(pass.Fset, n)
+			if isloc {
+				msg := fmt.Sprintf("func %s (lines of code=%d)\n", n.Name, loc)
 				fmt.Printf("%s:%d:%d: %s", p.Filename, p.Line, p.Column, msg)
+				locSum += loc
+			}
+
+			cycloComp := calcCycloComp(n)
+			if iscyclo {
+				msg := fmt.Sprintf("func %s (cyclomatic complexity=%d)\n", n.Name, cycloComp)
+				fmt.Printf("%s:%d:%d: %s", p.Filename, p.Line, p.Column, msg)
+				cycloAvg = append(cycloAvg, cycloComp)
 			}
 
 			halstMet := calcHalstComp(n)
-
-			loc := countLOC(pass.Fset, n)
-			maintIdx := calcMaintIndex(halstMet["volume"], cycloComp, loc)
-			if maintIdx < maintunder {
-				npos := n.Pos()
-				p := pass.Fset.File(npos).Position(npos)
-				msg := fmt.Sprintf("func %s seems to have low maintainability (maintainability index=%d)\n", n.Name, maintIdx)
+			if ishalst {
+				msg := fmt.Sprintf("func %s (Halstead complexity: volume=%0.3f, difficulty=%0.3f)\n", n.Name, halstMet["volume"], halstMet["difficulty"])
 				fmt.Printf("%s:%d:%d: %s", p.Filename, p.Line, p.Column, msg)
+				halstVolAvg = append(halstVolAvg, halstMet["volume"])
+				halstDiffAvg = append(halstDiffAvg, halstMet["difficulty"])
+			}
+
+			maintIdx := calcMaintIndex(halstMet["volume"], cycloComp, loc)
+			if ismaint {
+				msg := fmt.Sprintf("func %s (maintainability index=%d)\n", n.Name, maintIdx)
+				fmt.Printf("%s:%d:%d: %s", p.Filename, p.Line, p.Column, msg)
+				maintAvg = append(maintAvg, maintIdx)
 			}
 
 			// Only when `go test`
@@ -70,6 +93,37 @@ func run(pass *analysis.Pass) (interface{}, error) {
 			}
 		}
 	})
+
+	if isloc {
+		fmt.Printf("locSum= %d\n", locSum)
+	}
+	if iscyclo {
+		sum := 0
+		slen := len(cycloAvg)
+		for _, el := range cycloAvg {
+			sum += el
+		}
+		fmt.Printf("cycloAvg= %d %d %d\n", sum/slen, sum, slen)
+	}
+	if ishalst {
+		sumv := 0.0
+		sumd := 0.0
+		slen := len(halstVolAvg)
+		for i, el := range halstVolAvg {
+			sumv += el
+			sumd += halstDiffAvg[i]
+		}
+		fmt.Printf("halstVolAvg= %f %f %d\n", sumv/float64(slen), sumv, slen)
+		fmt.Printf("halstDiffAvg= %f %f %d\n", sumd/float64(slen), sumd, slen)
+	}
+	if ismaint {
+		sum := 0
+		slen := len(maintAvg)
+		for _, el := range maintAvg {
+			sum += el
+		}
+		fmt.Printf("maintAvg= %d %d %d\n", sum/slen, sum, slen)
+	}
 
 	return nil, nil
 }
@@ -121,6 +175,9 @@ func calcHalstComp(fd *ast.FuncDecl) map[string]float64 {
 	nVocab := distOpt + distOpd
 	length := sumOpt + sumOpd
 	halstMet["volume"] = float64(length) * math.Log2(float64(nVocab))
+	if distOpd == 0 {
+		distOpd = 1
+	}
 	halstMet["difficulty"] = float64(distOpt*sumOpd) / float64(2*distOpd)
 
 	return halstMet
